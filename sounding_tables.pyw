@@ -45,10 +45,8 @@ for tank in tanks:
 
 #slice the path and .csv fom the tank names        
 def slice_tanks():
-    i=0
-    for tank in tanks:
+    for i, _ in enumerate(tanks):
         tanks[i] = tanks[i][18:-4]
-        i=i+1
 
 #make the widgets
 def make_widgets():
@@ -75,8 +73,7 @@ def make_widgets():
     column_three.pack(side="left")
    
     #tank rows
-    i=0
-    for tank in tanks:
+    for i, _ in enumerate(tanks):
 
         if tanks[i][0:2] == "BA":
             column = column_two
@@ -148,8 +145,6 @@ def make_widgets():
         date_time_label = ttk.Label(result_frame)
         date_time_label["textvariable"] = date_and_time[i]
         date_time_label.pack(side="left")
-      
-        i=i+1
 
     exit_frame = ttk.Frame(main_window)
     exit_frame.pack()
@@ -256,8 +251,7 @@ def update_ui(state):
 
 def output_to_file(*args):
     output_file=open('./sounding_tables/last_soundings.txt', 'w')
-    i=0
-    for sounding in soundings:
+    for i, _ in enumerate(soundings):
         try:
             if soundings[i].get() == previous_values[i][1]:
                 print(tanks[i] + ',' + previous_values[i][1] + ',' + previous_values[i][2], file=output_file)
@@ -265,15 +259,12 @@ def output_to_file(*args):
                 print(tanks[i] + ',' + soundings[i].get() + ',' + str(datetime.today())[:-10], file=output_file)
         except:
             print(tanks[i] + ',' + soundings[i].get() + ',' + str(datetime.today())[:-10], file=output_file)
-        i=i+1
     output_file.close()
 
 def output_report_file(*args):
     output_file=open('./sounding_reports/Sounding Report ' + str(datetime.today())[:-13] + str(datetime.today())[-12:-10] + '.csv', 'w')
-    i=0
-    for sounding in soundings:
+    for i, _ in enumerate(soundings):
         print(tanks[i] + ',' + contents[i].get() + ',m3,' + date_and_time[i].get(), file=output_file)
-        i=i+1
     output_file.close()
     
 #trim tank names
