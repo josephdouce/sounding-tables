@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-Spyder Editor
-
 This is a sounding table program
 
 This program uses .csv files in the format 
