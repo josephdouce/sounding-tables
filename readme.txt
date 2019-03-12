@@ -25,7 +25,7 @@ BLACK WATER
 files must be .csv format and can be produced easily and edited in excel, they must be formatted as follows
 
 Trim followed by trim options
-sounding in cm followed by value in m3
+sounding in cm followed by value in m3, currently only trim 0 is accepted
 
 e.g.
 

@@ -13,30 +13,20 @@ files named as Tank.csv in ./sounding_tables/
 
 Created by Joseph Douce
 """
-import tkinter
+import tkinter as tk
 from tkinter import ttk
-from tkinter import messagebox
+from ttkthemes import themed_tk 
 from datetime import datetime, date, time
 import glob
 
 #import list of tanks from folder /sounding_tables/
 tanks = glob.glob('./sounding_tables/*.csv')
       
-#set bg colour 
-bg = "lightblue"
-
 #setup main_window
-main_window = tkinter.Tk()
+main_window = themed_tk.ThemedTk()
 main_window.title("Sounding Tables")
-main_window["bg"] =  bg
-
-#define ttk styles for widgets 
-style = ttk.Style()
-style.configure("TButton", padding=5, background=bg)
-style.configure("TFrame", background=bg)
-style.configure("TEntry", background=bg)
-style.configure("TLabel", background=bg)
-style.configure("TScale", background=bg)
+main_window.iconbitmap(default='./icon.ico')
+main_window.set_theme('arc')
 
 #global variables
 sounding_table = {}
@@ -50,9 +40,9 @@ date_and_time = {}
 #global widget varibales
 i=0
 for tank in tanks:
-    soundings[i] = tkinter.StringVar()
-    date_and_time[i] = tkinter.StringVar()
-    contents[i] = tkinter.StringVar()
+    soundings[i] = tk.StringVar()
+    date_and_time[i] = tk.StringVar()
+    contents[i] = tk.StringVar()
     i=i+1
 
 #slice the path and .csv fom the tank names        
@@ -73,14 +63,14 @@ def make_widgets():
     column_one.pack(side="left")
 
     column_spacer = ttk.Frame(sounding_frame)
-    column_spacer["width"] = 20
+    column_spacer["width"] = 10
     column_spacer.pack(side="left")
 
     column_two = ttk.Frame(sounding_frame)
     column_two.pack(side="left")
 
     column_spacer = ttk.Frame(sounding_frame)
-    column_spacer["width"] = 20
+    column_spacer["width"] = 10
     column_spacer.pack(side="left")
 
     column_three = ttk.Frame(sounding_frame)
@@ -124,45 +114,50 @@ def make_widgets():
         tank_label["width"] = 20
         tank_label.pack(side="left")
 
-        #cm label
-        cm_label = ttk.Label(tank_frame)
-        cm_label["text"] = "cm"
-        cm_label.pack(side="right") 
-
         #individual tank sounding boxes
         sounding_box = ttk.Entry(tank_frame)
         sounding_box["width"] = 5
         sounding_box["textvariable"] = soundings[i]
-        sounding_box.pack(side="right")
+        sounding_box.pack(side="left")
         sounding_box.bind("<Return>", update_values)
         sounding_box.bind("<Tab>", update_values)
+
+        #cm label
+        cm_label = ttk.Label(tank_frame)
+        cm_label["text"] = "cm"
+        cm_label["width"] = 3
+        cm_label.pack(side="left") 
 
         #spacer label
         spacer_label = ttk.Label(result_frame)
         spacer_label["text"] = ""
-        spacer_label["width"] = 10
+        spacer_label["width"] = 2
         spacer_label.pack(side="left")
+
+        #value label
+        value_label = ttk.Label(result_frame)
+        value_label["textvariable"] = contents[i]
+        value_label["width"] = 7
+        value_label.pack(side="left")
+
+        #m3 label
+        m3_label = ttk.Label(result_frame)
+        m3_label["text"] = "m3"
+        m3_label["width"] = 3
+        m3_label.pack(side="left")
 
         #datetime label
         date_time_label = ttk.Label(result_frame)
         date_time_label["textvariable"] = date_and_time[i]
-        date_time_label.pack(side="right")
-        
-        #value label
-        value_label = ttk.Label(result_frame)
-        value_label["textvariable"] = contents[i]
-        value_label["width"] = 5
-        value_label.pack(side="left")
-        
-        #m3 label
-        m3_label = ttk.Label(result_frame)
-        m3_label["text"] = "m3"
-        m3_label.pack(side="right")
-        
+        date_time_label.pack(side="left")
+      
         i=i+1
 
     exit_frame = ttk.Frame(main_window)
     exit_frame.pack()
+
+    copyright_frame = ttk.Frame(main_window)
+    copyright_frame.pack()
 
 #exit button 
     exit_button = ttk.Button(exit_frame)
@@ -180,12 +175,16 @@ def make_widgets():
     report_button["command"] = output_report_file
     report_button.pack(pady=5, side="left")
 
+    copyright_label = ttk.Label(copyright_frame)
+    copyright_label["text"] = "© Joseph Douce 2018"
+    copyright_label.pack()
+
 #select tank to be calculated
 def tank_selected(tank):
     try:
         load_sounding_table("sounding_tables/" + tank +".csv")
     except:
-        messagebox.showerror(title=None, message="Sounding Table Format Invalid!")
+        pass
 
 #generate sounding table from .csv file
 def load_sounding_table(file):
@@ -272,15 +271,12 @@ def output_to_file(*args):
     output_file.close()
 
 def output_report_file(*args):
-    output_file=open('./sounding_reports/Sounding Report ' + str(datetime.today())[:-13] + str(datetime.today())[-12:-10] + '.txt', 'w')
+    output_file=open('./sounding_reports/Sounding Report ' + str(datetime.today())[:-13] + str(datetime.today())[-12:-10] + '.csv', 'w')
     i=0
     for sounding in soundings:
-        print(tanks[i] + ',' + contents[i].get() + 'm3,' + date_and_time[i].get(), file=output_file)
+        print(tanks[i] + ',' + contents[i].get() + ',m3,' + date_and_time[i].get(), file=output_file)
         i=i+1
     output_file.close()
-
-def update_date(*args):
-    print("this is a test")
     
 #trim tank names
 slice_tanks()
