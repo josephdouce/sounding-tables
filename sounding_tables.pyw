@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-This is a sounding table program
+This is a sounding table program.
 
 This program uses .csv files in the format 
 Trim,value,value,... 
